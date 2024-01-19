@@ -9,13 +9,20 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
 
-const pages = ['Socials', 'Board', 'Partners'];
+interface Page {
+    handle: string;
+    ref?: any;
+}
 
-function ResponsiveAppBar() {
+function ResponsiveAppBar({ pages }: { pages: Page[] }, ref: any) {
+    const { socialsRef, boardRef, partnersRef } = ref;
+    const refs = [socialsRef, boardRef, partnersRef]
+    const pagesWithRefs = pages.map((page, i) => {
+        return { ...page, ref: refs[i] }
+    })
+
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-    const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElNav(event.currentTarget);
@@ -57,27 +64,35 @@ function ResponsiveAppBar() {
                                 horizontal: 'left',
                             }}
                             open={Boolean(anchorElNav)}
-                            onClose={handleCloseNavMenu}
+                            onClose={() => {
+                                handleCloseNavMenu()
+                            }}
                             sx={{
                                 display: { xs: 'block', md: 'none' },
                             }}
                         >
-                            {pages.map((page) => (
-                                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                                    <Typography variant='h4' textAlign="center">{page}</Typography>
+                            {pagesWithRefs.map((page) => (
+                                <MenuItem key={page.handle} onClick={(e: any) => {
+                                    page.ref.current.scrollIntoView({ behavior: 'smooth' })
+                                    handleCloseNavMenu()
+                                }}>
+                                    <Typography variant='h4' textAlign="center">{page.handle}</Typography>
                                 </MenuItem>
                             ))}
                         </Menu>
                     </Box>
 
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                        {pages.map((page) => (
+                        {pagesWithRefs.map((page) => (
                             <Button
-                                key={page}
-                                onClick={handleCloseNavMenu}
+                                key={page.handle}
+                                onClick={() => {
+                                    page.ref.current.scrollIntoView({ behavior: 'smooth' })
+                                    handleCloseNavMenu()
+                                }}
                                 sx={{ my: 2, color: 'white', display: 'block', fontSize: 20, mx: 4 }}
                             >
-                                {page}
+                                {page.handle}
                             </Button>
                         ))}
                     </Box>
@@ -116,4 +131,4 @@ function ResponsiveAppBar() {
         </AppBar>
     );
 }
-export default ResponsiveAppBar;
+export default React.forwardRef(ResponsiveAppBar);

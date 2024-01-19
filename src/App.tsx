@@ -47,9 +47,6 @@ function Copyright() {
     </Typography>
   );
 }
-
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
 const partners: Partner[] = [
   {
     name: "Smartbi Oy",
@@ -118,14 +115,18 @@ const defaultTheme = createTheme({
 
 
 export default function App() {
+  const partnersRef = React.useRef<any>(null);
+  const socialsRef = React.useRef<any>(null);
+  const boardRef = React.useRef<any>(null);
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
       <main style={{ backgroundColor: "black" }}>
-        <ResponsiveAppBar />
+        <ResponsiveAppBar pages={[{ handle: 'Socials' }, { handle: 'Board' }, { handle: 'Partners' }]} ref={{ socialsRef, boardRef, partnersRef } as any} />
         <Box
           sx={{
-            pt: 8,
+            pt: 0,
             pb: 6,
           }}
           height={'100vh'}
@@ -138,7 +139,7 @@ export default function App() {
             </Typography>
           </Container>
         </Box>
-        <Box style={{ marginBottom: 100 }}>
+        <Box ref={socialsRef} style={{ marginBottom: 100 }}>
           <Stack
             sx={{ pt: 4 }}
             direction="row"
@@ -178,7 +179,7 @@ export default function App() {
               pb: 6,
             }}
           >
-            <Container maxWidth="sm">
+            <Container ref={boardRef} id="board-members" maxWidth="sm">
               <Typography fontFamily={'Oswald'} variant="h3" align="center" color="common.white" paragraph>
                 Board Members
               </Typography>
@@ -191,17 +192,17 @@ export default function App() {
                 direction="column"
                 alignItems="center"
                 justifyContent="center" item key={member.telegram} xs={12} sm={6} md={4}>
-                <Avatar style={{ width: '200px', height: '200px', marginBottom: 20 }} alt="Olantius Lintinen" src={member.imgSrc} />
-                <Typography fontFamily={'Oswald'} gutterBottom variant="h4" component="h2">
+                <Avatar style={{ width: '200px', height: '200px', marginBottom: 20 }} alt="Olaus Lintinen" src={member.imgSrc} />
+                <Typography fontFamily={'Oswald'} color={"common.white"} gutterBottom variant="h4" component="h2">
                   {member.name}
                 </Typography>
-                <Typography fontFamily={'Oswald'} gutterBottom variant="h6">
+                <Typography fontFamily={'Oswald'} color={"common.white"} gutterBottom variant="h6">
                   {member.position}
                 </Typography>
-                <Typography fontFamily={'Oswald'} gutterBottom variant="h6">
+                <Typography fontFamily={'Oswald'} color={"common.white"} gutterBottom variant="h6">
                   {member.email}
                 </Typography>
-                <Typography fontFamily={'Oswald'} gutterBottom variant="h6">
+                <Typography fontFamily={'Oswald'} color={"common.white"} gutterBottom variant="h6">
                   Telegram: {member.telegram}
                 </Typography>
               </Grid>
@@ -214,9 +215,9 @@ export default function App() {
             pb: 6,
           }}
         >
-          <Container maxWidth="sm">
+          <Container ref={partnersRef} maxWidth="sm">
             <Typography fontFamily={'Oswald'} variant="h3" align="center" color="common.white" paragraph>
-              Partnerships
+              In Collaboration With
             </Typography>
           </Container>
         </Box>
@@ -228,7 +229,7 @@ export default function App() {
               direction="column"
               alignItems="center"
               justifyContent="center" item key={partner.name} xs={12} sm={6} md={4}>
-              <Avatar style={{ width: '200px', height: '200px', marginBottom: 20 }} alt="Olantius Lintinen" src={partner.imgSrc} />
+              <Avatar style={{ width: '200px', height: '200px', marginBottom: 20 }} alt={`${partner.name} logo`} src={partner.imgSrc} />
               <Typography fontFamily={'Oswald'} gutterBottom variant="h4" component="h2" color="common.white">
                 {partner.name}
               </Typography>
